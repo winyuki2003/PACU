@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PACU Airway Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        -webkit-tap-highlight-color: transparent;
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased h-full flex flex-col overflow-hidden">
+
+    <div id="loginPage" class="fixed inset-0 bg-slate-100 flex flex-col justify-center items-center px-4 z-[9999] transition-opacity duration-300">
+        <div class="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl space-y-6">
+            <div class="flex flex-col items-center text-center space-y-3">
+                <div class="bg-rose-600 text-white rounded-full p-4 shadow-lg"><i class="fa-solid fa-lungs-virus text-3xl"></i></div>
+                <div>
+                    <h1 class="font-black text-xl tracking-wider text-slate-900">PACU AIRWAY MANAGEMENT</h1>
+                    <p class="text-xs text-rose-600 font-bold uppercase tracking-widest mt-1">Clinical Authorization Portal</p>
+                </div>
+            </div>
+            <div id="loginError" class="hidden bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl p-3 flex items-start space-x-2.5">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500 mt-0.5"></i>
+                <span class="font-bold">Access Denied: Invalid Credentials.</span>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Login Name</label>
+                    <input type="text" id="username" required placeholder="Enter login name" class="w-full bg-slate-50 border border-slate-300 rounded-xl py-3.5 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Password</label>
+                    <input type="password" id="password" required placeholder="Enter passcode" class="w-full bg-slate-50 border border-slate-300 rounded-xl py-3.5 px-4 text-sm focus:outline-none focus:ring-1 focus:ring-rose-500">
+                </div>
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white text-sm font-black py-4 rounded-xl shadow-lg transition-all">Authorize Access</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="appContent" class="hidden h-full flex flex-col overflow-hidden">
+        <header class="bg-rose-600 border-b border-rose-700 px-4 py-3.5 flex items-center justify-between shadow-md shrink-0 z-50">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white text-rose-600 rounded-full p-2"><i class="fa-solid fa-lungs-virus"></i></div>
+                <div>
+                    <h1 class="font-black text-sm text-white">PACU AIRWAY MANAGEMENT</h1>
+                    <p class="text-[10px] text-rose-100 font-bold uppercase">Quick Reference</p>
+                </div>
+            </div>
+            <button onclick="handleLogout()" class="bg-rose-700 text-white text-xs font-black py-1.5 px-3 rounded-lg">Exit</button>
+        </header>
+
+        <main class="flex-1 p-4 space-y-6 overflow-y-auto">
+            <div class="space-y-2">
+                <h2 class="text-[10px] font-black uppercase text-slate-500">Inventory</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border-2 border-slate-200 rounded-xl p-3 space-y-3">
+                        <div class="flex justify-between"><span class="bg-blue-100 text-blue-800 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">Vent</span></div>
+                        <h3 class="font-black text-sm">Servo-U</h3>
+                        <button onclick="openPortal('servouPortal')" class="w-full bg-blue-600 text-white text-[11px] font-bold py-2 rounded-lg">Check Unit</button>
+                    </div>
+                    <div class="bg-white border-2 border-slate-200 rounded-xl p-3 space-y-3">
+                        <div class="flex justify-between"><span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">HFNC</span></div>
+                        <h3 class="font-black text-sm">Optiflow</h3>
+                        <button onclick="openPortal('optiflowPortal')" class="w-full bg-emerald-600 text-white text-[11px] font-bold py-2 rounded-lg">Setup Unit</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="openPortal('escalationPortal')" class="p-4 bg-teal-50 border-2 border-teal-200 rounded-2xl text-left">
+                    <span class="text-[10px] font-black text-teal-700 uppercase">Airway Pathway</span>
+                    <h3 class="text-sm font-black text-slate-900">Escalation Protocol</h3>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <div id="escalationPortal" class="fixed inset-0 bg-slate-50 z-50 transform translate-y-full transition-transform duration-300 overflow-y-auto hidden">
+        <div class="p-4 bg-white border-b border-slate-200 flex justify-between items-center">
+            <h3 class="font-black">Airway Escalation Pathway</h3>
+            <button onclick="closePortal('escalationPortal')" class="text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-4">
+            <p class="text-sm">Content for airway escalation steps goes here...</p>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            if (user.toLowerCase() === 'poh' && pass === '1234') {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('appContent').classList.remove('hidden');
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() { location.reload(); }
+        function openPortal(id) { document.getElementById(id).classList.remove('translate-y-full'); }
+        function closePortal(id) { document.getElementById(id).classList.add('translate-y-full'); }
+    </script>
+</body>
+</html>
